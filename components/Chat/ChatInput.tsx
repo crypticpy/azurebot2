@@ -386,11 +386,11 @@ export const ChatInput = ({
           rel="noreferrer"
           className="underline"
         >
-          ChatBot UI
+          ChatGPT for City of Austin Employees 
         </a>
         .{' '}
         {t(
-          "Chatbot UI is an advanced chatbot kit for OpenAI's chat models aiming to mimic ChatGPT's interface and functionality.",
+          "This is a fully featured chatbot built on the AzureOpenAI service designed for the City of Austin.",
         )}
       </div>
     </div>
