@@ -38,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const prompt_tokens = encoding.encode(promptToSend);
 
-    let tokenLimit = OpenAIModels[model.id as OpenAIModelID].tokenLimit * (1 - BUFFER_FACTOR);
+    let tokenLimit = OpenAIModels[model.id as OpenAIModelID].tokenLimit * (1 + BUFFER_FACTOR);
     let tokenCount = prompt_tokens.length;
     let messagesToSend: Message[] = [];
 
@@ -63,9 +63,9 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error) {
     console.error(error);
     if (error instanceof OpenAIError) {
-      return new Response('Error', { status: 500, statusText: error.message });
+      return new Response('Error Token Limit Reached - Please start a new chat', { status: 500, statusText: error.message });
     } else {
-      return new Response('Error', { status: 500 });
+      return new Response('Error Token Limit Reached', { status: 500 });
     }
   }
 };
