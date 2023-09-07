@@ -18,6 +18,7 @@ import {
 
 import { useTranslation } from 'next-i18next';
 
+import { ChatInputTokenCount } from './ChatInputTokenCount';
 import { Message } from '@/types/chat';
 import { Plugin } from '@/types/plugin';
 import { Prompt } from '@/types/prompt';
@@ -310,7 +311,9 @@ export const ChatInput = ({
               />
             </div>
           )}
-
+          <div className="absolute bottom-full md:mb-4 mb-12 mx-auto flex w-full justify-center md:justify-end pointer-events-none">
+            <ChatInputTokenCount content={content} />
+          </div>
           <textarea
             ref={textareaRef}
             className="m-0 w-full resize-none border-0 bg-transparent p-0 py-2 pr-8 pl-10 text-black dark:bg-transparent dark:text-white md:py-3 md:pl-10"
