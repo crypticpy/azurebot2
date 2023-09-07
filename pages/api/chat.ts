@@ -13,8 +13,7 @@ export const config = {
   runtime: 'edge',
 };
 
-const COMPLETION_TOKEN_LIMIT = 2000;
-const TOKENIZER_BUFFER_FACTOR = 0.9; // Set a buffer of 10% to account for any discrepancies in token counting
+const BUFFER_FACTOR = 0.2; // 20% buffer for a completion
 
 const handler = async (req: Request): Promise<Response> => {
   try {
@@ -39,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const prompt_tokens = encoding.encode(promptToSend);
 
-    let tokenLimit = OpenAIModels[model.id as OpenAIModelID].tokenLimit;
+    let tokenLimit = OpenAIModels[model.id as OpenAIModelID].tokenLimit * (1 - BUFFER_FACTOR);
     let tokenCount = prompt_tokens.length;
     let messagesToSend: Message[] = [];
 
@@ -47,11 +46,13 @@ const handler = async (req: Request): Promise<Response> => {
       const message = messages[i];
       const tokens = encoding.encode(message.content);
 
-      if (tokenCount + tokens.length + COMPLETION_TOKEN_LIMIT > model.tokenLimit * TOKENIZER_BUFFER_FACTOR) {
-        break;
+      if (tokenCount + tokens.length > tokenLimit) {
+        tokenCount -= encoding.encode(messagesToSend[0].content).length;
+        messagesToSend.shift();
       }
-      tokenCount += tokens.length;
+
       messagesToSend = [message, ...messagesToSend];
+      tokenCount += tokens.length;
     }
 
     encoding.free();
