@@ -1,6 +1,6 @@
 import { DEFAULT_SYSTEM_PROMPT, DEFAULT_TEMPERATURE } from '@/utils/app/const';
 import { OpenAIError, OpenAIStream } from '@/utils/server';
-
+import { OpenAIModel, OpenAIModelID, OpenAIModels } from '@/types/openai';
 import { ChatBody, Message } from '@/types/chat';
 
 // @ts-expect-error
@@ -39,6 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const prompt_tokens = encoding.encode(promptToSend);
 
+    let tokenLimit = OpenAIModels[model.id as OpenAIModelID].tokenLimit;
     let tokenCount = prompt_tokens.length;
     let messagesToSend: Message[] = [];
 
